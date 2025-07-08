@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_user")
@@ -20,7 +21,11 @@ public class User implements Serializable {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "id.user")
+    private List<UserRole> usersRoles;
 
     private LocalDateTime createdAt;
 
@@ -56,6 +61,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<UserRole> getUsersRoles() {
+        return usersRoles;
+    }
+
+    public void setUsersRoles(List<UserRole> usersRoles) {
+        this.usersRoles = usersRoles;
     }
 
     public LocalDateTime getCreatedAt() {
