@@ -1,6 +1,5 @@
 package br.com.gcs.ms_auth_service.security;
 
-import br.com.gcs.ms_auth_service.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;

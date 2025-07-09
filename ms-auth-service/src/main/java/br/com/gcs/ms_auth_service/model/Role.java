@@ -2,12 +2,13 @@ package br.com.gcs.ms_auth_service.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_role")
-public class Roles {
+public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +23,13 @@ public class Roles {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    public Role() {
+    }
+
+    public Role(String description) {
+        this.description = description;
+    }
 
     public Long getId() {
         return id;
