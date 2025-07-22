@@ -25,4 +25,11 @@ public class GlobalExcpetionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<ErrorMessage> roleNotFoundException(HttpServletRequest request, RoleNotFoundException e) {
+        ErrorMessage errorMessage = new ErrorMessage(e.getMessage(), HttpStatus.NOT_FOUND.value(),
+                request.getRequestURI(), Instant.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+    }
+
 }

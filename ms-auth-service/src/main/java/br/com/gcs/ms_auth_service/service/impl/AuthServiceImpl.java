@@ -1,5 +1,6 @@
 package br.com.gcs.ms_auth_service.service.impl;
 
+import br.com.gcs.ms_auth_service.exception.RoleNotFoundException;
 import br.com.gcs.ms_auth_service.model.RoleEnum;
 import br.com.gcs.ms_auth_service.model.User;
 import br.com.gcs.ms_auth_service.model.UserRole;
@@ -66,11 +67,12 @@ public class AuthServiceImpl implements AuthService {
 
         user = userRepository.save(user);
 
-        var role = roleRepository.findByDescription(RoleEnum.USER.name());
+        var role = roleRepository.findByDescription(RoleEnum.USER.name())
+                .orElseThrow(() -> new RoleNotFoundException("Role was not found!"));
 
         UserRoleId userRoleId = new UserRoleId();
         userRoleId.setUser(user);
-        userRoleId.setRole(role.get());
+        userRoleId.setRole(role);
 
         UserRole userRole = new UserRole();
         userRole.setId(userRoleId);
