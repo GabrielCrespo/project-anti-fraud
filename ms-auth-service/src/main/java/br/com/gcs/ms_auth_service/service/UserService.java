@@ -1,5 +1,7 @@
 package br.com.gcs.ms_auth_service.service;
 
-public interface UserService {
+import br.com.gcs.ms_auth_service.model.dto.UserToSendRequest;
 
+public interface UserService {
+    void sendUser(UserToSendRequest request);
 }

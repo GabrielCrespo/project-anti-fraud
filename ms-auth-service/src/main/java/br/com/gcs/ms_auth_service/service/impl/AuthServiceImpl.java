@@ -5,15 +5,13 @@ import br.com.gcs.ms_auth_service.model.RoleEnum;
 import br.com.gcs.ms_auth_service.model.User;
 import br.com.gcs.ms_auth_service.model.UserRole;
 import br.com.gcs.ms_auth_service.model.UserRoleId;
-import br.com.gcs.ms_auth_service.model.dto.LoginRequest;
-import br.com.gcs.ms_auth_service.model.dto.RegisterRequest;
-import br.com.gcs.ms_auth_service.model.dto.TokenResponse;
-import br.com.gcs.ms_auth_service.model.dto.UserResponse;
+import br.com.gcs.ms_auth_service.model.dto.*;
 import br.com.gcs.ms_auth_service.repository.RoleRepository;
 import br.com.gcs.ms_auth_service.repository.UserRepository;
 import br.com.gcs.ms_auth_service.repository.UserRoleRepository;
 import br.com.gcs.ms_auth_service.security.JwtUtil;
 import br.com.gcs.ms_auth_service.service.AuthService;
+import br.com.gcs.ms_auth_service.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,18 +37,22 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
 
+    private final UserService userService;
+
     public AuthServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository,
                            UserRoleRepository userRoleRepository,
                            JwtUtil jwtUtil,
                            PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager) {
+                           AuthenticationManager authenticationManager,
+                           UserService userService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userRoleRepository = userRoleRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
     @Override
@@ -79,6 +81,9 @@ public class AuthServiceImpl implements AuthService {
 
         userRole = userRoleRepository.save(userRole);
         user.setUsersRoles(List.of(userRole));
+
+        var userToSend = new UserToSendRequest(user.getEmail());
+        userService.sendUser(userToSend);
 
         return user.toResponse();
     }
