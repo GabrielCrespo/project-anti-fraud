@@ -1,6 +1,7 @@
 package br.com.gcs.ms_order_service.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +17,7 @@ public class JwtUtil {
     public String extractUsername(String header) {
 
         if (!StringUtils.hasLength(header) || !header.startsWith("Bearer ")) {
-            throw new RuntimeException("Token JWT ausente ou inválido");
+            throw new JwtException("Token JWT ausente ou inválido");
         }
 
         String token = header.substring("Bearer ".length());

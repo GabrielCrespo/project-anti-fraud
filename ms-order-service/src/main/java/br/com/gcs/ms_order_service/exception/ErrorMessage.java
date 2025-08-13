@@ -1,4 +1,4 @@
-package br.com.gcs.ms_auth_service.exception;
+package br.com.gcs.ms_order_service.exception;
 
 import java.time.Instant;
 import java.util.Map;

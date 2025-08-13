@@ -5,6 +5,7 @@ import br.com.gcs.ms_auth_service.model.dto.RegisterRequest;
 import br.com.gcs.ms_auth_service.model.dto.TokenResponse;
 import br.com.gcs.ms_auth_service.model.dto.UserResponse;
 import br.com.gcs.ms_auth_service.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,14 +26,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<UserResponse> register(@RequestBody @Valid RegisterRequest request) {
         var response = authService.register(request);
         URI uri = UriComponentsBuilder.fromPath("/{id}").buildAndExpand(response.id()).toUri();
         return ResponseEntity.created(uri).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid LoginRequest request) {
         return ResponseEntity.ok().body(authService.login(request));
     }
 }

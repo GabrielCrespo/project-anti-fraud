@@ -4,6 +4,7 @@ import br.com.gcs.ms_order_service.domain.dto.OrderRequest;
 import br.com.gcs.ms_order_service.domain.dto.OrderResponse;
 import br.com.gcs.ms_order_service.domain.enums.OrderStatus;
 import br.com.gcs.ms_order_service.domain.model.Order;
+import br.com.gcs.ms_order_service.exception.ResourceNotFoundException;
 import br.com.gcs.ms_order_service.repository.OrderRepository;
 import br.com.gcs.ms_order_service.repository.UserRepository;
 import br.com.gcs.ms_order_service.security.JwtUtil;
@@ -34,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
         String username = jwtUtil.extractUsername(token);
 
         var user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         var order = new Order();
         order.setAmount(request.amount());
@@ -43,6 +44,6 @@ public class OrderServiceImpl implements OrderService {
 
         order = orderRepository.save(order);
 
-        return new OrderResponse(order.getAmount(), order.getStatus());
+        return new OrderResponse(order.getId(), order.getAmount(), order.getStatus());
     }
 }

@@ -1,5 +1,6 @@
 package br.com.gcs.ms_auth_service.service.impl;
 
+import br.com.gcs.ms_auth_service.exception.PropertyAlreadyTakenException;
 import br.com.gcs.ms_auth_service.exception.RoleNotFoundException;
 import br.com.gcs.ms_auth_service.model.RoleEnum;
 import br.com.gcs.ms_auth_service.model.User;
@@ -16,7 +17,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
     public UserResponse register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.email())) {
-            throw new UsernameNotFoundException("Email already taken!");
+            throw new PropertyAlreadyTakenException("Email already taken!");
         }
 
         var user = new User();
