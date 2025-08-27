@@ -1,15 +1,19 @@
 package br.com.gcs.ms_order_service.service.impl;
 
+import br.com.gcs.ms_order_service.domain.dto.OrderCreatedEvent;
 import br.com.gcs.ms_order_service.domain.dto.OrderRequest;
 import br.com.gcs.ms_order_service.domain.dto.OrderResponse;
 import br.com.gcs.ms_order_service.domain.enums.OrderStatus;
 import br.com.gcs.ms_order_service.domain.model.Order;
 import br.com.gcs.ms_order_service.exception.ResourceNotFoundException;
+import br.com.gcs.ms_order_service.messaging.OrderEventPublisher;
 import br.com.gcs.ms_order_service.repository.OrderRepository;
 import br.com.gcs.ms_order_service.repository.UserRepository;
 import br.com.gcs.ms_order_service.security.JwtUtil;
 import br.com.gcs.ms_order_service.service.OrderService;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -20,13 +24,17 @@ public class OrderServiceImpl implements OrderService {
 
     private final JwtUtil jwtUtil;
 
+    private final OrderEventPublisher orderEventPublisher;
+
     public OrderServiceImpl(
             OrderRepository orderRepository,
             UserRepository userRepository,
-            JwtUtil jwtUtil) {
+            JwtUtil jwtUtil,
+            OrderEventPublisher orderEventPublisher) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
+        this.orderEventPublisher = orderEventPublisher;
     }
 
     @Override
@@ -43,6 +51,9 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(user);
 
         order = orderRepository.save(order);
+
+        var orderCreatedEvent = new OrderCreatedEvent(order.getId(), user.getId(), order.getAmount(), LocalDateTime.now());
+        orderEventPublisher.publishOrderCreatedEvent(orderCreatedEvent);
 
         return new OrderResponse(order.getId(), order.getAmount(), order.getStatus());
     }
