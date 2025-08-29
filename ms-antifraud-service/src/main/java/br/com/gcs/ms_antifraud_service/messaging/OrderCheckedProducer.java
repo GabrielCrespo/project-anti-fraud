@@ -1,6 +1,6 @@
 package br.com.gcs.ms_antifraud_service.messaging;
 
-import br.com.gcs.ms_antifraud_service.domain.dto.CheckedOrderEvent;
+import br.com.gcs.ms_antifraud_service.domain.dto.OrderCheckedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,8 +24,8 @@ public class OrderCheckedProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void sendCheckedOrder(CheckedOrderEvent checkedOrderEvent) {
-        rabbitTemplate.convertAndSend(ordersExchangeName, fraudCheckedRoutingKey, checkedOrderEvent);
-        LOGGER.info("✅ Evento de validação enviado: {}", checkedOrderEvent);
+    public void sendCheckedOrder(OrderCheckedEvent orderCheckedEvent) {
+        rabbitTemplate.convertAndSend(ordersExchangeName, fraudCheckedRoutingKey, orderCheckedEvent);
+        LOGGER.info("✅ Evento de validação enviado: {}", orderCheckedEvent);
     }
 }

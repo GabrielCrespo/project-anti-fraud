@@ -58,4 +58,16 @@ public class OrderServiceImpl implements OrderService {
         return new OrderResponse(order.getId(), order.getAmount(), order.getStatus());
     }
 
+    @Override
+    public Order findById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found for id: " + id));
+    }
+
+    @Override
+    public void updateOrderStatus(Order order) {
+        orderRepository.save(order);
+    }
+
+
 }

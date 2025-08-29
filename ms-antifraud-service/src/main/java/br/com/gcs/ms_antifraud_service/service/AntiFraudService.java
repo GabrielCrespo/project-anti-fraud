@@ -1,6 +1,6 @@
 package br.com.gcs.ms_antifraud_service.service;
 
-import br.com.gcs.ms_antifraud_service.domain.dto.CheckedOrderEvent;
+import br.com.gcs.ms_antifraud_service.domain.dto.OrderCheckedEvent;
 import br.com.gcs.ms_antifraud_service.domain.dto.OrderCreatedEvent;
 import br.com.gcs.ms_antifraud_service.domain.enums.Status;
 import br.com.gcs.ms_antifraud_service.domain.model.Fraud;
@@ -49,7 +49,7 @@ public class AntiFraudService {
 
         invoiceRepository.save(invoice);
 
-        var checkedOrderEvent = new CheckedOrderEvent(
+        var checkedOrderEvent = new OrderCheckedEvent(
                 orderCreatedEvent.orderId(),
                 orderCreatedEvent.userId(),
                 invoice.getStatus(),
